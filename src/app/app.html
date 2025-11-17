@@ -1,24 +1,27 @@
-<main class="min-h-screen flex flex-col border-4 border-red-500">
+<main class="min-h-screen flex flex-col bg-[#0f0f0f] text-gray-200">
+
   <!-- HEADER -->
-  <header class="h-16 bg-white border-2 border-blue-500 flex items-center justify-center font-bold text-blue-600">
+  <header class="h-16 bg-[#181818] shadow-md flex items-center justify-center border-b border-[#242424]">
     <app-header></app-header>
   </header>
 
-  <!-- CONTENEDOR CENTRAL (ASIDE + CONTENT) -->
+  <!-- CONTENEDOR CENTRAL -->
   <div class="flex flex-1">
+
     <!-- ASIDE -->
-    <aside class="w-64 bg-white border-2 border-blue-500 flex items-start justify-start font-bold text-blue-400">
+    <aside class="w-64 bg-[#121212] border-r border-[#242424]">
       <app-aside></app-aside>
     </aside>
 
     <!-- CONTENT -->
-    <section class="flex-1 bg-white border-2 border-blue-500 flex items-center justify-center font-bold text-blue-600">
-      <router-outlet />
+    <section class="flex-1 bg-[#181818] p-6 overflow-y-auto">
+      <router-outlet></router-outlet>
     </section>
+
   </div>
 
-  <!-- FOOTER (pegado al fondo) -->
-  <footer class="h-16 bg-white border-2 border-blue-500 flex items-center justify-center font-bold text-blue-600 mt-auto">
+  <!-- FOOTER -->
+  <footer class="h-14 bg-[#181818] border-t border-[#242424] flex items-center justify-center text-gray-400">
     <app-footer></app-footer>
   </footer>
 </main>
