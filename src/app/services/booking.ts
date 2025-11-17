@@ -14,87 +14,87 @@ interface PaginatedResponse<T> {
 @Injectable({
   providedIn: 'root'
 })
-export class ModeloService {
-  private baseUrl = 'http://localhost:8000/api/modelos';
-  private modelosSubject = new BehaviorSubject<BookingResponseI[]>([]);
-  public modelos$ = this.modelosSubject.asObservable();
+export class BookingService {
+  private baseUrl = 'http://127.0.0.1:8000/api/bookings/';
+  private bookingsSubject = new BehaviorSubject<BookingResponseI[]>([]);
+  public bookings$ = this.bookingsSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  getAllModelos(): Observable<BookingResponseI[]> {
+  getAllbookings(): Observable<BookingResponseI[]> {
     return this.http.get<PaginatedResponse<BookingResponseI>>(`${this.baseUrl}/`)
       .pipe(
         map(response => response.results),
-        tap(modelos => {
-          console.log('Fetched modelos:', modelos);
-          this.modelosSubject.next(modelos);
+        tap(bookings => {
+          console.log('Fetched bookings:', bookings);
+          this.bookingsSubject.next(bookings);
         }),
         catchError(error => {
-          console.error('Error fetching modelos:', error);
+          console.error('Error fetching bookings:', error);
           return throwError(() => error);
         })
       );
   }
 
-  getModeloById(id: number): Observable<BookingResponseI> {
+  getBookingById(id: number): Observable<BookingResponseI> {
     return this.http.get<BookingResponseI>(`${this.baseUrl}/${id}/`)
       .pipe(
         catchError(error => {
-          console.error('Error fetching modelo:', error);
+          console.error('Error fetching booking:', error);
           return throwError(() => error);
         })
       );
   }
 
-  createModelo(modelo: BookingI): Observable<BookingResponseI> {
-    return this.http.post<BookingResponseI>(`${this.baseUrl}/`, modelo)
+  createBooking(booking: BookingI): Observable<BookingResponseI> {
+    return this.http.post<BookingResponseI>(`${this.baseUrl}/`, booking)
       .pipe(
         tap(response => {
-          console.log('Modelo created:', response);
-          this.refreshModelos();
+          console.log('booking created:', response);
+          this.refreshbookings();
         }),
         catchError(error => {
-          console.error('Error creating modelo:', error);
+          console.error('Error creating booking:', error);
           return throwError(() => error);
         })
       );
   }
 
-  updateModelo(id: number, modelo: Partial<BookingI>): Observable<BookingResponseI> {
-    return this.http.put<BookingResponseI>(`${this.baseUrl}/${id}/`, modelo)
+  updateBooking(id: number, booking: Partial<BookingI>): Observable<BookingResponseI> {
+    return this.http.put<BookingResponseI>(`${this.baseUrl}/${id}/`, booking)
       .pipe(
         tap(response => {
-          console.log('Modelo updated:', response);
-          this.refreshModelos();
+          console.log('booking updated:', response);
+          this.refreshbookings();
         }),
         catchError(error => {
-          console.error('Error updating modelo:', error);
+          console.error('Error updating booking:', error);
           return throwError(() => error);
         })
       );
   }
 
-  deleteModelo(id: number): Observable<void> {
+  deleteBooking(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}/`)
       .pipe(
         tap(() => {
-          console.log('Modelo deleted:', id);
-          this.refreshModelos();
+          console.log('booking deleted:', id);
+          this.refreshbookings();
         }),
         catchError(error => {
-          console.error('Error deleting modelo:', error);
+          console.error('Error deleting booking:', error);
           return throwError(() => error);
         })
       );
   }
 
-  refreshModelos(): void {
-    this.getAllModelos().subscribe({
-      next: (modelos) => {
-        this.modelosSubject.next(modelos);
+  refreshbookings(): void {
+    this.getAllbookings().subscribe({
+      next: (bookings) => {
+        this.bookingsSubject.next(bookings);
       },
       error: (error) => {
-        console.error('Error refreshing modelos:', error);
+        console.error('Error refreshing bookings:', error);
       }
     });
   }

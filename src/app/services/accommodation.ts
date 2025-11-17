@@ -1,4 +1,4 @@
-// src/app/services/[modelo].service.ts
+// src/app/services/[accommodation].service.ts
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -16,87 +16,87 @@ interface PaginatedResponse<T> {
 @Injectable({
   providedIn: 'root'
 })
-export class ModeloService {
-  private baseUrl = 'http://localhost:8000/api/modelos';
-  private modelosSubject = new BehaviorSubject<AccommodationResponseI[]>([]);
-  public modelos$ = this.modelosSubject.asObservable();
+export class AccommodationService {
+  private baseUrl = 'http://127.0.0.1:8000/api/accommodations/';
+  private accommodationsSubject = new BehaviorSubject<AccommodationResponseI[]>([]);
+  public accommodations$ = this.accommodationsSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  getAllModelos(): Observable<AccommodationResponseI[]> {
+  getAllaccommodations(): Observable<AccommodationResponseI[]> {
     return this.http.get<PaginatedResponse<AccommodationResponseI>>(`${this.baseUrl}/`)
       .pipe(
         map(response => response.results),
-        tap(modelos => {
-          console.log('Fetched modelos:', modelos);
-          this.modelosSubject.next(modelos);
+        tap(accommodations => {
+          console.log('Fetched accommodations:', accommodations);
+          this.accommodationsSubject.next(accommodations);
         }),
         catchError(error => {
-          console.error('Error fetching modelos:', error);
+          console.error('Error fetching accommodations:', error);
           return throwError(() => error);
         })
       );
   }
 
-  getModeloById(id: number): Observable<AccommodationResponseI> {
+  getaccommodationById(id: number): Observable<AccommodationResponseI> {
     return this.http.get<AccommodationResponseI>(`${this.baseUrl}/${id}/`)
       .pipe(
         catchError(error => {
-          console.error('Error fetching modelo:', error);
+          console.error('Error fetching accommodation:', error);
           return throwError(() => error);
         })
       );
   }
 
-  createModelo(modelo: AccommodationI): Observable<AccommodationResponseI> {
-    return this.http.post<AccommodationResponseI>(`${this.baseUrl}/`, modelo)
+  createaccommodation(accommodation: AccommodationI): Observable<AccommodationResponseI> {
+    return this.http.post<AccommodationResponseI>(`${this.baseUrl}/`, accommodation)
       .pipe(
         tap(response => {
-          console.log('Modelo created:', response);
-          this.refreshModelos();
+          console.log('accommodation created:', response);
+          this.refreshaccommodations();
         }),
         catchError(error => {
-          console.error('Error creating modelo:', error);
+          console.error('Error creating accommodation:', error);
           return throwError(() => error);
         })
       );
   }
 
-  updateModelo(id: number, modelo: Partial<AccommodationI>): Observable<AccommodationResponseI> {
-    return this.http.put<AccommodationResponseI>(`${this.baseUrl}/${id}/`, modelo)
+  updateaccommodation(id: number, accommodation: Partial<AccommodationI>): Observable<AccommodationResponseI> {
+    return this.http.put<AccommodationResponseI>(`${this.baseUrl}/${id}/`, accommodation)
       .pipe(
         tap(response => {
-          console.log('Modelo updated:', response);
-          this.refreshModelos();
+          console.log('accommodation updated:', response);
+          this.refreshaccommodations();
         }),
         catchError(error => {
-          console.error('Error updating modelo:', error);
+          console.error('Error updating accommodation:', error);
           return throwError(() => error);
         })
       );
   }
 
-  deleteModelo(id: number): Observable<void> {
+  deleteaccommodation(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}/`)
       .pipe(
         tap(() => {
-          console.log('Modelo deleted:', id);
-          this.refreshModelos();
+          console.log('accommodation deleted:', id);
+          this.refreshaccommodations();
         }),
         catchError(error => {
-          console.error('Error deleting modelo:', error);
+          console.error('Error deleting accommodation:', error);
           return throwError(() => error);
         })
       );
   }
 
-  refreshModelos(): void {
-    this.getAllModelos().subscribe({
-      next: (modelos) => {
-        this.modelosSubject.next(modelos);
+  refreshaccommodations(): void {
+    this.getAllaccommodations().subscribe({
+      next: (accommodations) => {
+        this.accommodationsSubject.next(accommodations);
       },
       error: (error) => {
-        console.error('Error refreshing modelos:', error);
+        console.error('Error refreshing accommodations:', error);
       }
     });
   }

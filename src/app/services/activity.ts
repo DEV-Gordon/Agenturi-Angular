@@ -15,87 +15,87 @@ interface PaginatedResponse<T> {
 @Injectable({
   providedIn: 'root'
 })
-export class ModeloService {
-  private baseUrl = 'http://localhost:8000/api/modelos';
-  private modelosSubject = new BehaviorSubject<ActivityResponseI[]>([]);
-  public modelos$ = this.modelosSubject.asObservable();
+export class ActivityService {
+  private baseUrl = 'http://127.0.0.1:8000/api/activities/';
+  private activitiesSubject = new BehaviorSubject<ActivityResponseI[]>([]);
+  public activities$ = this.activitiesSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  getAllModelos(): Observable<ActivityResponseI[]> {
+  getAllactivities(): Observable<ActivityResponseI[]> {
     return this.http.get<PaginatedResponse<ActivityResponseI>>(`${this.baseUrl}/`)
       .pipe(
         map(response => response.results),
-        tap(modelos => {
-          console.log('Fetched modelos:', modelos);
-          this.modelosSubject.next(modelos);
+        tap(activities => {
+          console.log('Fetched activities:', activities);
+          this.activitiesSubject.next(activities);
         }),
         catchError(error => {
-          console.error('Error fetching modelos:', error);
+          console.error('Error fetching activities:', error);
           return throwError(() => error);
         })
       );
   }
 
-  getModeloById(id: number): Observable<ActivityResponseI> {
+  getActivityById(id: number): Observable<ActivityResponseI> {
     return this.http.get<ActivityResponseI>(`${this.baseUrl}/${id}/`)
       .pipe(
         catchError(error => {
-          console.error('Error fetching modelo:', error);
+          console.error('Error fetching activity:', error);
           return throwError(() => error);
         })
       );
   }
 
-  createModelo(modelo: ActivityI): Observable<ActivityResponseI> {
-    return this.http.post<ActivityResponseI>(`${this.baseUrl}/`, modelo)
+  createActivity(activity: ActivityI): Observable<ActivityResponseI> {
+    return this.http.post<ActivityResponseI>(`${this.baseUrl}/`, activity)
       .pipe(
         tap(response => {
-          console.log('Modelo created:', response);
-          this.refreshModelos();
+          console.log('activity created:', response);
+          this.refreshactivities();
         }),
         catchError(error => {
-          console.error('Error creating modelo:', error);
+          console.error('Error creating activity:', error);
           return throwError(() => error);
         })
       );
   }
 
-  updateModelo(id: number, modelo: Partial<ActivityI>): Observable<ActivityResponseI> {
-    return this.http.put<ActivityResponseI>(`${this.baseUrl}/${id}/`, modelo)
+  updateActivity(id: number, activity: Partial<ActivityI>): Observable<ActivityResponseI> {
+    return this.http.put<ActivityResponseI>(`${this.baseUrl}/${id}/`, activity)
       .pipe(
         tap(response => {
-          console.log('Modelo updated:', response);
-          this.refreshModelos();
+          console.log('activity updated:', response);
+          this.refreshactivities();
         }),
         catchError(error => {
-          console.error('Error updating modelo:', error);
+          console.error('Error updating activity:', error);
           return throwError(() => error);
         })
       );
   }
 
-  deleteModelo(id: number): Observable<void> {
+  deleteActivity(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}/`)
       .pipe(
         tap(() => {
-          console.log('Modelo deleted:', id);
-          this.refreshModelos();
+          console.log('activity deleted:', id);
+          this.refreshactivities();
         }),
         catchError(error => {
-          console.error('Error deleting modelo:', error);
+          console.error('Error deleting activity:', error);
           return throwError(() => error);
         })
       );
   }
 
-  refreshModelos(): void {
-    this.getAllModelos().subscribe({
-      next: (modelos) => {
-        this.modelosSubject.next(modelos);
+  refreshactivities(): void {
+    this.getAllactivities().subscribe({
+      next: (activities) => {
+        this.activitiesSubject.next(activities);
       },
       error: (error) => {
-        console.error('Error refreshing modelos:', error);
+        console.error('Error refreshing activities:', error);
       }
     });
   }
