@@ -1,9 +1,18 @@
-import { Itinerary } from './itinerary';
-
-export interface Activity {
+export interface ActivityI {
     id?: number;
     name: string;
     description?: string;
     extra_cost: number;
-    itinerary: number | Itinerary;
+    itinerary: number;
+}
+
+export interface ActivityResponseI {
+    id?: number;
+    name: string;
+    description?: string;
+    extra_cost: number;
+    itinerary: {
+    id: number;
+    day: number;
+    };
 }

@@ -1,9 +1,18 @@
-import { Plan } from './plan';
-
-export interface Guide {
+export interface GuideI {
     id?: number;
     name: string;
     phone: string;
     language: string;
-    plan: number | Plan;
+    plan: number;
+}
+
+export interface GuideResponseI {
+    id?: number;
+    name: string;
+    phone: string;
+    language: string;
+    plan: {
+    id: number;
+    name: string;
+    };
 }

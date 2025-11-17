@@ -1,11 +1,13 @@
-import { Accommodation } from './accommodation';
-import { Transport } from './transport';
-
-export interface Destination {
+export interface DestinationI {
     id?: number;
     name: string;
     country?: string;
     city?: string;
-    accommodations?: Accommodation[];
-    transports?: Transport[];
+}
+
+export interface DestinationResponseI {
+    id?: number;
+    name: string;
+    country?: string;
+    city?: string;
 }

@@ -1,9 +1,19 @@
-import { Destination } from './destination';
 
-export interface Accommodation {
+export interface AccommodationI {
     id?: number;
     name: string;
     type?: string;
     address?: string;
-    destination: number | Destination;
+    destination: number;
+}
+
+export interface AccommodationResponseI {
+    id?: number;
+    name: string;
+    type?: string;
+    address?: string;
+    destination: {
+    id: number;
+    name: string;
+    };
 }

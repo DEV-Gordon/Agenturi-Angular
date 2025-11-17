@@ -1,10 +1,16 @@
-import { Plan } from './plan';
-import { Activity } from './activity';
-
-export interface Itinerary {
+export interface ItineraryI {
     id?: number;
     day: number;
     description?: string;
-    plan: number | Plan;
-    activities?: Activity[];
+    plan: number;
+}
+
+export interface ItineraryResponseI {
+    id?: number;
+    day: number;
+    description?: string;
+    plan: {
+    id: number;
+    name: string;
+    };
 }
