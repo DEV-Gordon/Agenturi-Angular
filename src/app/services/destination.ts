@@ -1,33 +1,103 @@
+// src/app/services/[modelo].service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Destination } from '../models';
+import { Observable, BehaviorSubject, tap, catchError, throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { DestinationI, DestinationResponseI } from '../models';
+
+interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class DestinationService {
-  private apiUrl = 'http://localhost:8000/api/destinations';
+export class ModeloService {
+  private baseUrl = 'http://localhost:8000/api/modelos';
+  private modelosSubject = new BehaviorSubject<DestinationResponseI[]>([]);
+  public modelos$ = this.modelosSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getAll(): Observable<Destination[]> {
-    return this.http.get<Destination[]>(`${this.apiUrl}/`);
+  getAllModelos(): Observable<DestinationResponseI[]> {
+    return this.http.get<PaginatedResponse<DestinationResponseI>>(`${this.baseUrl}/`)
+      .pipe(
+        map(response => response.results),
+        tap(modelos => {
+          console.log('Fetched modelos:', modelos);
+          this.modelosSubject.next(modelos);
+        }),
+        catchError(error => {
+          console.error('Error fetching modelos:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
-  getById(id: number): Observable<Destination> {
-    return this.http.get<Destination>(`${this.apiUrl}/${id}/`);
+  getModeloById(id: number): Observable<DestinationResponseI> {
+    return this.http.get<DestinationResponseI>(`${this.baseUrl}/${id}/`)
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching modelo:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
-  create(destination: Destination): Observable<Destination> {
-    return this.http.post<Destination>(`${this.apiUrl}/`, destination);
+  createModelo(modelo: DestinationI): Observable<DestinationResponseI> {
+    return this.http.post<DestinationResponseI>(`${this.baseUrl}/`, modelo)
+      .pipe(
+        tap(response => {
+          console.log('Modelo created:', response);
+          this.refreshModelos();
+        }),
+        catchError(error => {
+          console.error('Error creating modelo:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
-  update(id: number, destination: Destination): Observable<Destination> {
-    return this.http.put<Destination>(`${this.apiUrl}/${id}/`, destination);
+  updateModelo(id: number, modelo: Partial<DestinationI>): Observable<DestinationResponseI> {
+    return this.http.put<DestinationResponseI>(`${this.baseUrl}/${id}/`, modelo)
+      .pipe(
+        tap(response => {
+          console.log('Modelo updated:', response);
+          this.refreshModelos();
+        }),
+        catchError(error => {
+          console.error('Error updating modelo:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}/`);
+  deleteModelo(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}/`)
+      .pipe(
+        tap(() => {
+          console.log('Modelo deleted:', id);
+          this.refreshModelos();
+        }),
+        catchError(error => {
+          console.error('Error deleting modelo:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  refreshModelos(): void {
+    this.getAllModelos().subscribe({
+      next: (modelos) => {
+        this.modelosSubject.next(modelos);
+      },
+      error: (error) => {
+        console.error('Error refreshing modelos:', error);
+      }
+    });
   }
 }

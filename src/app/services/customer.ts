@@ -28,11 +28,11 @@ export class ModeloService {
       .pipe(
         map(response => response.results),
         tap(modelos => {
-          console.log('Fetched modelos:', modelos);
+          console.log('Fetched models:', modelos);
           this.modelosSubject.next(modelos);
         }),
         catchError(error => {
-          console.error('Error fetching modelos:', error);
+          console.error('Error fetching models:', error);
           return throwError(() => error);
         })
       );
@@ -42,7 +42,7 @@ export class ModeloService {
     return this.http.get<CustomerResponseI>(`${this.baseUrl}/${id}/`)
       .pipe(
         catchError(error => {
-          console.error('Error fetching modelo:', error);
+          console.error('Error fetching model:', error);
           return throwError(() => error);
         })
       );
@@ -56,7 +56,7 @@ export class ModeloService {
           this.refreshModelos();
         }),
         catchError(error => {
-          console.error('Error creating modelo:', error);
+          console.error('Error creating model:', error);
           return throwError(() => error);
         })
       );
@@ -70,7 +70,7 @@ export class ModeloService {
           this.refreshModelos();
         }),
         catchError(error => {
-          console.error('Error updating modelo:', error);
+          console.error('Error updating model:', error);
           return throwError(() => error);
         })
       );
@@ -84,7 +84,7 @@ export class ModeloService {
           this.refreshModelos();
         }),
         catchError(error => {
-          console.error('Error deleting modelo:', error);
+          console.error('Error deleting model:', error);
           return throwError(() => error);
         })
       );
@@ -96,7 +96,7 @@ export class ModeloService {
         this.modelosSubject.next(modelos);
       },
       error: (error) => {
-        console.error('Error refreshing modelos:', error);
+        console.error('Error refreshing models:', error);
       }
     });
   }

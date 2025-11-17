@@ -1,33 +1,103 @@
+// src/app/services/[modelo].service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { Accommodation } from '../models';
+import { Observable, BehaviorSubject, tap, catchError, throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { AccommodationI, AccommodationResponseI } from '../models';
+
+interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
-export class AccommodationService {
-  private apiUrl = 'http://localhost:8000/api/accommodations';
+export class ModeloService {
+  private baseUrl = 'http://localhost:8000/api/modelos';
+  private modelosSubject = new BehaviorSubject<AccommodationResponseI[]>([]);
+  public modelos$ = this.modelosSubject.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
-  getAll(): Observable<Accommodation[]> {
-    return this.http.get<Accommodation[]>(`${this.apiUrl}/`);
+  getAllModelos(): Observable<AccommodationResponseI[]> {
+    return this.http.get<PaginatedResponse<AccommodationResponseI>>(`${this.baseUrl}/`)
+      .pipe(
+        map(response => response.results),
+        tap(modelos => {
+          console.log('Fetched modelos:', modelos);
+          this.modelosSubject.next(modelos);
+        }),
+        catchError(error => {
+          console.error('Error fetching modelos:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
-  getById(id: number): Observable<Accommodation> {
-    return this.http.get<Accommodation>(`${this.apiUrl}/${id}/`);
+  getModeloById(id: number): Observable<AccommodationResponseI> {
+    return this.http.get<AccommodationResponseI>(`${this.baseUrl}/${id}/`)
+      .pipe(
+        catchError(error => {
+          console.error('Error fetching modelo:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
-  create(accommodation: Accommodation): Observable<Accommodation> {
-    return this.http.post<Accommodation>(`${this.apiUrl}/`, accommodation);
+  createModelo(modelo: AccommodationI): Observable<AccommodationResponseI> {
+    return this.http.post<AccommodationResponseI>(`${this.baseUrl}/`, modelo)
+      .pipe(
+        tap(response => {
+          console.log('Modelo created:', response);
+          this.refreshModelos();
+        }),
+        catchError(error => {
+          console.error('Error creating modelo:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
-  update(id: number, accommodation: Accommodation): Observable<Accommodation> {
-    return this.http.put<Accommodation>(`${this.apiUrl}/${id}/`, accommodation);
+  updateModelo(id: number, modelo: Partial<AccommodationI>): Observable<AccommodationResponseI> {
+    return this.http.put<AccommodationResponseI>(`${this.baseUrl}/${id}/`, modelo)
+      .pipe(
+        tap(response => {
+          console.log('Modelo updated:', response);
+          this.refreshModelos();
+        }),
+        catchError(error => {
+          console.error('Error updating modelo:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}/`);
+  deleteModelo(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}/`)
+      .pipe(
+        tap(() => {
+          console.log('Modelo deleted:', id);
+          this.refreshModelos();
+        }),
+        catchError(error => {
+          console.error('Error deleting modelo:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  refreshModelos(): void {
+    this.getAllModelos().subscribe({
+      next: (modelos) => {
+        this.modelosSubject.next(modelos);
+      },
+      error: (error) => {
+        console.error('Error refreshing modelos:', error);
+      }
+    });
   }
 }
