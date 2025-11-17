@@ -22,9 +22,9 @@ export class CustomerService {
   public customers$ = this.customersSubject.asObservable();
 
   constructor(private http: HttpClient) {}
-
+/*
   getAllcustomers(): Observable<CustomerResponseI[]> {
-    return this.http.get<PaginatedResponse<CustomerResponseI>>(`${this.baseUrl}/`)
+    return this.http.get<PaginatedResponse<CustomerResponseI>>(this.baseUrl)
       .pipe(
         map(response => response.results),
         tap(customers => {
@@ -36,7 +36,22 @@ export class CustomerService {
           return throwError(() => error);
         })
       );
+  }*/
+
+  getAllcustomers(): Observable<CustomerResponseI[]> {
+    return this.http.get<CustomerResponseI[]>(this.baseUrl)
+      .pipe(
+        tap((customers: CustomerResponseI[]) => {
+          console.log('Fetched models:', customers);
+          this.customersSubject.next(customers);
+        }),
+        catchError((error: unknown) => {
+          console.error('Error fetching models:', error);
+          return throwError(() => error);
+        })
+      );
   }
+
 
   getcustomerById(id: number): Observable<CustomerResponseI> {
     return this.http.get<CustomerResponseI>(`${this.baseUrl}/${id}/`)
