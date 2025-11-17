@@ -29,6 +29,7 @@ import { CustomerResponseI } from '../../../models/customer';
   templateUrl: './getall.html',
   styleUrl: './getall.css'
 })
+
 export class Getall implements OnInit, OnDestroy {
   customers: CustomerResponseI[] = [];
   loading = false;
