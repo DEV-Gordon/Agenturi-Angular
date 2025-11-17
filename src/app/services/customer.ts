@@ -76,7 +76,7 @@ export class CustomerService {
       );
   }
 
-  deletecustomer(id: number): Observable<void> {
+  deleteCustomer(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}/`)
       .pipe(
         tap(() => {
