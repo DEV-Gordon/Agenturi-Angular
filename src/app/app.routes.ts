@@ -25,7 +25,7 @@ import { Getall as DestinationGetall } from './components/destination/getall/get
 import { Create as DestinationCreate } from './components/destination/create/create';
 import { Update as DestinationUpdate } from './components/destination/update/update';
 import { Delete as DestinationDelete } from './components/destination/delete/delete';
-//guide 
+//guide
 import { Getall as GuideGetall } from './components/guide/getall/getall';
 import { Create as GuideCreate } from './components/guide/create/create';
 import { Update as GuideUpdate } from './components/guide/update/update';
