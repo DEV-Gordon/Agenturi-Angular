@@ -1,5 +1,3 @@
-// src/app/components/customer/getall/getall.ts
-
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
