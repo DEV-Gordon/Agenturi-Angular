@@ -74,23 +74,23 @@ export class Getall implements OnInit, OnDestroy {
     );
   }
 
-  confirmDelete(customer: PlanResponseI): void {
+  confirmDelete(plan: PlanResponseI): void {
     this.confirmationService.confirm({
-      message: `¿Está seguro de que desea eliminar a ${customer.first_name} ${customer.last_name}?`,
+      message: `¿Está seguro de que desea eliminar a ${plan.name}?`,
       header: 'Confirmar Eliminación',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: 'Sí, eliminar',
       rejectLabel: 'Cancelar',
       acceptButtonStyleClass: 'p-button-danger',
       accept: () => {
-        this.deleteCustomer(customer.id!);
+        this.deleteplan(plan.id!);
       }
     });
   }
 
-  deleteCustomer(id: number): void {
+  deleteplan(id: number): void {
     this.subscription.add(
-      this.PlanService.deleteCustomer(id).subscribe({
+      this.PlanService.deleteplan(id).subscribe({
         next: () => {
           this.messageService.add({
             severity: 'success',
@@ -99,7 +99,7 @@ export class Getall implements OnInit, OnDestroy {
           });
         },
         error: (error) => {
-          console.error('Error deleting customer:', error);
+          console.error('Error deleting plan:', error);
           this.messageService.add({
             severity: 'error',
             summary: 'Error',

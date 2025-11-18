@@ -75,7 +75,7 @@ export const routes: Routes = [
     path: 'activities',
     component: ActivityGetall
     },
-    {
+    { 
     path: 'activities/new',
     component: ActivityCreate
     },

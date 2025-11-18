@@ -1,4 +1,3 @@
-// src/app/services/[destination].service.ts
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -24,9 +23,13 @@ export class DestinationService {
   constructor(private http: HttpClient) {}
 
   getAlldestinations(): Observable<DestinationResponseI[]> {
-    return this.http.get<PaginatedResponse<DestinationResponseI>>(`${this.baseUrl}/`)
+    return this.http.get<any>(`${this.baseUrl}`)
       .pipe(
-        map(response => response.results),
+        map(response =>
+          Array.isArray(response)
+            ? response     // ✔ Tu caso: viene como array directo
+            : response.results ?? []  // ✔ por si luego activas paginación
+        ),
         tap(destinations => {
           console.log('Fetched destinations:', destinations);
           this.destinationsSubject.next(destinations);

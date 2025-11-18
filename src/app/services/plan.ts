@@ -40,6 +40,50 @@ export class PlanService {
       );
   }
 
+createplan(plan: PlanI): Observable<PlanResponseI> {
+    return this.http.post<PlanResponseI>(`${this.baseUrl}/`, plan)
+      .pipe(
+        tap(response => {
+          console.log('plan created:', response);
+          this.refreshplans();
+        }),
+        catchError(error => {
+          console.error('Error creating model:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  updateplan(id: number, plan: Partial<PlanI>): Observable<PlanResponseI> {
+    const url = `${this.baseUrl}/${id}`;
+    console.log('Updating plan at URL:', url, 'with data:', plan);
+    return this.http.put<PlanResponseI>(url, plan)
+      .pipe(
+        tap(response => {
+          console.log('plan updated:', response);
+          this.refreshplans();
+        }),
+        catchError(error => {
+          console.error('Error updating model:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  deleteplan(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${id}/`)
+      .pipe(
+        tap(() => {
+          console.log('plan deleted:', id);
+          this.refreshplans();
+        }),
+        catchError(error => {
+          console.error('Error deleting model:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
   refreshplans(): void {
     this.getAllplans().subscribe({
       next: (plans) => {

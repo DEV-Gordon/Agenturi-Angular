@@ -1,1 +1,83 @@
-<p>create works!</p>
+<div class="card p-8 max-w-3xl mx-auto">
+  <h2 class="text-2xl font-bold mb-4">Crear Nuevo Plan</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+
+    <!-- Nombre -->
+    <div>
+      <label class="font-medium mb-1 block">Nombre del Plan</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="name"
+        placeholder="Ej: Plan Caribe Premium"
+        class="w-full"
+      />
+      <small *ngIf="form.get('name')?.invalid && form.get('name')?.touched" class="text-red-500">
+        El nombre es obligatorio.
+      </small>
+    </div>
+ 
+    <!-- Descripción -->
+    <div>
+      <label class="font-medium mb-1 block">Descripción</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="description"
+        placeholder="Ej: Descripción del plan"
+        class="w-full"
+      />
+    </div>
+
+    <!-- Precio base -->
+    <div>
+      <label class="font-medium mb-1 block">Precio Base</label>
+      <input
+        type="number"
+        pInputText
+        formControlName="base_price"
+        placeholder="0"
+        class="w-full"
+      />
+      <small *ngIf="form.get('base_price')?.invalid && form.get('base_price')?.touched" class="text-red-500">
+        El precio base es obligatorio.
+      </small>
+    </div> 
+
+    <!-- Destino -->
+    <div>
+      <label class="font-medium mb-1 block">Destino</label>
+      <p-select
+        [options]="destinations"
+        optionLabel="name"
+        optionValue="id"
+        placeholder="Seleccione un destino"
+        formControlName="destination_id"
+        class="w-full"
+      ></p-select>
+      <small *ngIf="form.get('destination_id')?.invalid && form.get('destination_id')?.touched" class="text-red-500">
+        Debe seleccionar un destino.
+      </small>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-end gap-2 mt-4">
+      <p-button
+        label="Cancelar"
+        severity="secondary"
+        [routerLink]="['/plans']"
+      ></p-button>
+
+      <p-button
+        label="Guardar"
+        icon="pi pi-check"
+        severity="success"
+        [disabled]="form.invalid || loading"
+        type="submit"
+      ></p-button>
+    </div>
+  </form>
+</div>
+
+<p-toast></p-toast>
