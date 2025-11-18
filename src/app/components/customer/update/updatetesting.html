@@ -1,0 +1,22 @@
+<div class="card p-8">
+  <div *ngIf="loading" class="text-center p-4">
+    <p>Cargando cliente...</p>
+  </div>
+  
+  <div *ngIf="!loading && customer">
+    <h2 class="text-2xl font-bold mb-4">Editar Cliente</h2>
+    <p>ID: {{ customer.id }}</p>
+    <p>Nombre: {{ customer.first_name }} {{ customer.last_name }}</p>
+    <p>Email: {{ customer.email }}</p>
+    <p>Teléfono: {{ customer.phone || 'N/A' }}</p>
+    <button (click)="goBack()" class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Volver a la lista</button>
+  </div>
+
+  <div *ngIf="!loading && !customer" class="text-center p-4">
+    <p class="text-red-500 font-bold mb-2">Error: Cliente no encontrado o no se pudo cargar</p>
+    <p *ngIf="customerId" class="text-sm text-gray-600 mb-2">ID intentado: {{ customerId }}</p>
+    <p *ngIf="errorMessage" class="text-sm text-red-600 mb-2">{{ errorMessage }}</p>
+    <p class="text-sm text-gray-500 mb-4">Revisa la consola del navegador (F12) para más detalles</p>
+    <button (click)="goBack()" class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Volver a la lista</button>
+  </div>
+</div>

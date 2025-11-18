@@ -80,7 +80,9 @@ export class CustomerService {
   }
 
   updatecustomer(id: number, customer: Partial<CustomerI>): Observable<CustomerResponseI> {
-    return this.http.put<CustomerResponseI>(`${this.baseUrl}/${id}/`, customer)
+    const url = `${this.baseUrl}/${id}`;
+    console.log('Updating customer at URL:', url, 'with data:', customer);
+    return this.http.put<CustomerResponseI>(url, customer)
       .pipe(
         tap(response => {
           console.log('customer updated:', response);

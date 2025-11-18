@@ -1,22 +1,129 @@
-<div class="card p-8">
-  <div *ngIf="loading" class="text-center p-4">
-    <p>Cargando cliente...</p>
-  </div>
-  
-  <div *ngIf="!loading && customer">
-    <h2 class="text-2xl font-bold mb-4">Editar Cliente</h2>
-    <p>ID: {{ customer.id }}</p>
-    <p>Nombre: {{ customer.first_name }} {{ customer.last_name }}</p>
-    <p>Email: {{ customer.email }}</p>
-    <p>Teléfono: {{ customer.phone || 'N/A' }}</p>
-    <button (click)="goBack()" class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Volver a la lista</button>
+<div class="card p-8 max-w-4xl mx-auto">
+  <!-- Loading State -->
+  <div *ngIf="loadingData" class="text-center p-8">
+    <i class="pi pi-spin pi-spinner text-4xl text-blue-400 mb-4"></i>
+    <p class="text-gray-300 text-lg">Cargando datos del cliente...</p>
   </div>
 
-  <div *ngIf="!loading && !customer" class="text-center p-4">
-    <p class="text-red-500 font-bold mb-2">Error: Cliente no encontrado o no se pudo cargar</p>
-    <p *ngIf="customerId" class="text-sm text-gray-600 mb-2">ID intentado: {{ customerId }}</p>
-    <p *ngIf="errorMessage" class="text-sm text-red-600 mb-2">{{ errorMessage }}</p>
-    <p class="text-sm text-gray-500 mb-4">Revisa la consola del navegador (F12) para más detalles</p>
-    <button (click)="goBack()" class="mt-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">Volver a la lista</button>
+  <!-- Form -->
+  <div *ngIf="!loadingData && customer">
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-100 mb-2">Editar Cliente</h2>
+      <p class="text-gray-400">ID: {{ customer.id }} - Actualice la información del cliente</p>
+    </div>
+
+    <form [formGroup]="customerForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- First Name -->
+      <div class="flex flex-col gap-2">
+        <label for="first_name" class="font-semibold text-gray-200">
+          Nombre <span class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          id="first_name"
+          formControlName="first_name"
+          placeholder="Ingrese el nombre"
+          [class.p-invalid]="isFieldInvalid('first_name')"
+          class="w-full"
+        />
+        <small 
+          *ngIf="isFieldInvalid('first_name')" 
+          class="text-red-400"
+        >
+          {{ getErrorMessage('first_name') }}
+        </small>
+      </div>
+
+      <!-- Last Name -->
+      <div class="flex flex-col gap-2">
+        <label for="last_name" class="font-semibold text-gray-200">
+          Apellido <span class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          id="last_name"
+          formControlName="last_name"
+          placeholder="Ingrese el apellido"
+          [class.p-invalid]="isFieldInvalid('last_name')"
+          class="w-full"
+        />
+        <small 
+          *ngIf="isFieldInvalid('last_name')" 
+          class="text-red-400"
+        >
+          {{ getErrorMessage('last_name') }}
+        </small>
+      </div>
+
+      <!-- Email -->
+      <div class="flex flex-col gap-2">
+        <label for="email" class="font-semibold text-gray-200">
+          Email <span class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          id="email"
+          formControlName="email"
+          type="email"
+          placeholder="ejemplo@correo.com"
+          [class.p-invalid]="isFieldInvalid('email')"
+          class="w-full"
+        />
+        <small 
+          *ngIf="isFieldInvalid('email')" 
+          class="text-red-400"
+        >
+          {{ getErrorMessage('email') }}
+        </small>
+      </div>
+
+      <!-- Phone -->
+      <div class="flex flex-col gap-2">
+        <label for="phone" class="font-semibold text-gray-200">
+          Teléfono
+        </label>
+        <input
+          pInputText
+          id="phone"
+          formControlName="phone"
+          placeholder="Ingrese el teléfono (opcional)"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end gap-3 pt-4 border-t border-gray-700">
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          (onClick)="goBack()"
+          styleClass="p-button-outlined p-button-secondary"
+          [disabled]="loading"
+        ></p-button>
+        <p-button
+          label="Actualizar Cliente"
+          icon="pi pi-check"
+          type="submit"
+          styleClass="p-button-warning"
+          [loading]="loading"
+          [disabled]="loading"
+        ></p-button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!loadingData && !customer" class="text-center p-8">
+    <i class="pi pi-exclamation-triangle text-4xl text-red-400 mb-4"></i>
+    <p class="text-red-400 font-bold text-lg mb-2">Error al cargar el cliente</p>
+    <p class="text-gray-400 mb-4">No se pudo encontrar el cliente solicitado</p>
+    <p-button
+      label="Volver a la lista"
+      icon="pi pi-arrow-left"
+      (onClick)="goBack()"
+      styleClass="p-button-outlined"
+    ></p-button>
   </div>
 </div>
+
+<p-toast></p-toast>
