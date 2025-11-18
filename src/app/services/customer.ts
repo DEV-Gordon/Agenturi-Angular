@@ -22,21 +22,6 @@ export class CustomerService {
   public customers$ = this.customersSubject.asObservable();
 
   constructor(private http: HttpClient) {}
-/*
-  getAllcustomers(): Observable<CustomerResponseI[]> {
-    return this.http.get<PaginatedResponse<CustomerResponseI>>(this.baseUrl)
-      .pipe(
-        map(response => response.results),
-        tap(customers => {
-          console.log('Fetched models:', customers);
-          this.customersSubject.next(customers);
-        }),
-        catchError(error => {
-          console.error('Error fetching models:', error);
-          return throwError(() => error);
-        })
-      );
-  }*/
 
   getAllcustomers(): Observable<CustomerResponseI[]> {
     return this.http.get<CustomerResponseI[]>(this.baseUrl)
