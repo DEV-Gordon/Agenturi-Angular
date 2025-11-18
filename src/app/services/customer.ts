@@ -17,7 +17,7 @@ interface PaginatedResponse<T> {
   providedIn: 'root'
 })
 export class CustomerService {
-  private baseUrl = 'http://127.0.0.1:8000/api/customers/';
+  private baseUrl = 'http://127.0.0.1:8000/api/customers';
   private customersSubject = new BehaviorSubject<CustomerResponseI[]>([]);
   public customers$ = this.customersSubject.asObservable();
 
@@ -52,15 +52,17 @@ export class CustomerService {
       );
   }
 
-
   getcustomerById(id: number): Observable<CustomerResponseI> {
-    return this.http.get<CustomerResponseI>(`${this.baseUrl}/${id}/`)
+    const url = `${this.baseUrl}/${id}/`;
+    console.log('Fetching customer from URL:', url);
+    return this.http.get<CustomerResponseI>(url)
       .pipe(
-        catchError(error => {
+        catchError((error: unknown) => {
           console.error('Error fetching model:', error);
+          console.error('Request URL was:', url);
           return throwError(() => error);
-        })
-      );
+        }) 
+      ); 
   }
 
   createcustomer(customer: CustomerI): Observable<CustomerResponseI> {
