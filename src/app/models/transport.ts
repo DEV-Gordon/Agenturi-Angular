@@ -1,3 +1,5 @@
+import { DestinationI } from './destination';
+
 export interface TransportI {
     id?: number;
     type: string;
@@ -9,8 +11,5 @@ export interface TransportResponseI {
     id?: number;
     type: string;
     company: string;
-    destination: {
-    id: number;
-    name: string;
-    };
+    destination: DestinationI
 }

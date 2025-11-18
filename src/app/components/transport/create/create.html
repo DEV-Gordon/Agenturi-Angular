@@ -1,1 +1,70 @@
-<p>create works!</p>
+<div class="card p-8 max-w-3xl mx-auto">
+  <h2 class="text-2xl font-bold mb-4">Crear Nuevo Transporte</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+
+    <!-- Tipo -->
+    <div>
+      <label class="font-medium mb-1 block">Tipo de Transporte</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="type"
+        placeholder="Ej: Bus, Auto, Camión"
+        class="w-full"
+      />
+      <small *ngIf="form.get('type')?.invalid && form.get('type')?.touched" class="text-red-500">
+        El tipo es obligatorio.
+      </small>
+    </div>
+ 
+    <div>
+      <label class="font-medium mb-1 block">Compañía</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="company"
+        placeholder="Ej: Empresa transportadora"
+        class="w-full"
+      />
+      <small *ngIf="form.get('company')?.invalid && form.get('company')?.touched" class="text-red-500">
+        La compañía es obligatoria.
+      </small>
+    </div>
+
+    <!-- Destino -->
+    <div>
+      <label class="font-medium mb-1 block">Destino</label>
+      <p-select
+        [options]="destinations"
+        optionLabel="name"
+        optionValue="id"
+        placeholder="Seleccione un destino"
+        formControlName="destination_id"
+        class="w-full"
+      ></p-select>
+      <small *ngIf="form.get('destination_id')?.invalid && form.get('destination_id')?.touched" class="text-red-500">
+        Debe seleccionar un destino.
+      </small>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-end gap-2 mt-4">
+      <p-button
+        label="Cancelar"
+        severity="secondary"
+        [routerLink]="['/plans']"
+      ></p-button>
+
+      <p-button
+        label="Guardar"
+        icon="pi pi-check"
+        severity="success"
+        [disabled]="form.invalid || loading"
+        type="submit"
+      ></p-button>
+    </div>
+  </form>
+</div>
+
+<p-toast></p-toast>
