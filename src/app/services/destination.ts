@@ -1,51 +1,41 @@
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, tap, catchError, throwError } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DestinationI, DestinationResponseI } from '../models';
 
-interface PaginatedResponse<T> {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: T[];
-}
-
 @Injectable({
   providedIn: 'root'
 })
 export class DestinationService {
-  private baseUrl = 'http://127.0.0.1:8000/api/destinations/';
+  private baseUrl = 'http://127.0.0.1:8000/api/destinations';
   private destinationsSubject = new BehaviorSubject<DestinationResponseI[]>([]);
   public destinations$ = this.destinationsSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
   getAlldestinations(): Observable<DestinationResponseI[]> {
-    return this.http.get<any>(`${this.baseUrl}`)
+    return this.http.get<DestinationResponseI[]>(this.baseUrl)
       .pipe(
-        map(response =>
-          Array.isArray(response)
-            ? response     // ✔ Tu caso: viene como array directo
-            : response.results ?? []  // ✔ por si luego activas paginación
-        ),
-        tap(destinations => {
+        tap((destinations: DestinationResponseI[]) => {
           console.log('Fetched destinations:', destinations);
           this.destinationsSubject.next(destinations);
         }),
-        catchError(error => {
+        catchError((error: unknown) => {
           console.error('Error fetching destinations:', error);
           return throwError(() => error);
         })
       );
   }
 
-  getdestinationById(id: number): Observable<DestinationResponseI> {
-    return this.http.get<DestinationResponseI>(`${this.baseUrl}/${id}/`)
+  getDestinationById(id: number): Observable<DestinationResponseI> {
+    const url = `${this.baseUrl}/${id}/`;
+    console.log('Fetching destination from URL:', url);
+    return this.http.get<DestinationResponseI>(url)
       .pipe(
-        catchError(error => {
+        catchError((error: unknown) => {
           console.error('Error fetching destination:', error);
+          console.error('Request URL was:', url);
           return throwError(() => error);
         })
       );
@@ -55,8 +45,8 @@ export class DestinationService {
     return this.http.post<DestinationResponseI>(`${this.baseUrl}/`, destination)
       .pipe(
         tap(response => {
-          console.log('destination created:', response);
-          this.refreshdestinations();
+          console.log('Destination created:', response);
+          this.refreshDestinations();
         }),
         catchError(error => {
           console.error('Error creating destination:', error);
@@ -66,11 +56,13 @@ export class DestinationService {
   }
 
   updateDestination(id: number, destination: Partial<DestinationI>): Observable<DestinationResponseI> {
-    return this.http.put<DestinationResponseI>(`${this.baseUrl}/${id}/`, destination)
+    const url = `${this.baseUrl}/${id}/`;
+    console.log('Updating destination at URL:', url, 'with data:', destination);
+    return this.http.put<DestinationResponseI>(url, destination)
       .pipe(
         tap(response => {
-          console.log('destination updated:', response);
-          this.refreshdestinations();
+          console.log('Destination updated:', response);
+          this.refreshDestinations();
         }),
         catchError(error => {
           console.error('Error updating destination:', error);
@@ -83,8 +75,8 @@ export class DestinationService {
     return this.http.delete<void>(`${this.baseUrl}/${id}/`)
       .pipe(
         tap(() => {
-          console.log('destination deleted:', id);
-          this.refreshdestinations();
+          console.log('Destination deleted:', id);
+          this.refreshDestinations();
         }),
         catchError(error => {
           console.error('Error deleting destination:', error);
@@ -93,7 +85,7 @@ export class DestinationService {
       );
   }
 
-  refreshdestinations(): void {
+  refreshDestinations(): void {
     this.getAlldestinations().subscribe({
       next: (destinations) => {
         this.destinationsSubject.next(destinations);

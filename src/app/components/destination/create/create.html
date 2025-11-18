@@ -1,1 +1,78 @@
-<p>create works!</p>
+<div class="card p-8 max-w-4xl mx-auto">
+  <div class="mb-6">
+    <h2 class="text-2xl font-bold text-gray-100 mb-2">Crear Nuevo Destino</h2>
+    <p class="text-gray-400">Complete el formulario para agregar un nuevo destino turístico</p>
+  </div>
+
+  <form [formGroup]="destinationForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <!-- Name -->
+    <div class="flex flex-col gap-2">
+      <label for="name" class="font-semibold text-gray-200">
+        Nombre del Destino <span class="text-red-500">*</span>
+      </label>
+      <input
+        pInputText
+        id="name"
+        formControlName="name"
+        placeholder="Ej: Cartagena de Indias"
+        [class.p-invalid]="isFieldInvalid('name')"
+        class="w-full"
+      />
+      <small 
+        *ngIf="isFieldInvalid('name')" 
+        class="text-red-400"
+      >
+        {{ getErrorMessage('name') }}
+      </small>
+    </div>
+
+    <!-- City -->
+    <div class="flex flex-col gap-2">
+      <label for="city" class="font-semibold text-gray-200">
+        Ciudad
+      </label>
+      <input
+        pInputText
+        id="city"
+        formControlName="city"
+        placeholder="Ej: Cartagena"
+        class="w-full"
+      />
+    </div>
+
+    <!-- Country -->
+    <div class="flex flex-col gap-2">
+      <label for="country" class="font-semibold text-gray-200">
+        País
+      </label>
+      <input
+        pInputText
+        id="country"
+        formControlName="country"
+        placeholder="Ej: Colombia"
+        class="w-full"
+      />
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end gap-3 pt-4 border-t border-gray-700">
+      <p-button
+        label="Cancelar"
+        icon="pi pi-times"
+        (onClick)="goBack()"
+        styleClass="p-button-outlined p-button-secondary"
+        [disabled]="loading"
+      ></p-button>
+      <p-button
+        label="Guardar Destino"
+        icon="pi pi-check"
+        type="submit"
+        styleClass="p-button-success"
+        [loading]="loading"
+        [disabled]="loading"
+      ></p-button>
+    </div>
+  </form>
+</div>
+
+<p-toast></p-toast>

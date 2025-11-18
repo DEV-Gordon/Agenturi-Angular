@@ -1,1 +1,100 @@
-<p>update works!</p>
+<div class="card p-8 max-w-4xl mx-auto">
+  <!-- Loading State -->
+  <div *ngIf="loadingData" class="text-center p-8">
+    <i class="pi pi-spin pi-spinner text-4xl text-blue-400 mb-4"></i>
+    <p class="text-gray-300 text-lg">Cargando datos del destino...</p>
+  </div>
+
+  <!-- Form -->
+  <div *ngIf="!loadingData && destination">
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-100 mb-2">Editar Destino</h2>
+      <p class="text-gray-400">ID: {{ destination.id }} - Actualice la información del destino</p>
+    </div>
+
+    <form [formGroup]="destinationForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Name -->
+      <div class="flex flex-col gap-2">
+        <label for="name" class="font-semibold text-gray-200">
+          Nombre del Destino <span class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          id="name"
+          formControlName="name"
+          placeholder="Ej: Cartagena de Indias"
+          [class.p-invalid]="isFieldInvalid('name')"
+          class="w-full"
+        />
+        <small 
+          *ngIf="isFieldInvalid('name')" 
+          class="text-red-400"
+        >
+          {{ getErrorMessage('name') }}
+        </small>
+      </div>
+
+      <!-- City -->
+      <div class="flex flex-col gap-2">
+        <label for="city" class="font-semibold text-gray-200">
+          Ciudad
+        </label>
+        <input
+          pInputText
+          id="city"
+          formControlName="city"
+          placeholder="Ej: Cartagena"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Country -->
+      <div class="flex flex-col gap-2">
+        <label for="country" class="font-semibold text-gray-200">
+          País
+        </label>
+        <input
+          pInputText
+          id="country"
+          formControlName="country"
+          placeholder="Ej: Colombia"
+          class="w-full"
+        />
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end gap-3 pt-4 border-t border-gray-700">
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          (onClick)="goBack()"
+          styleClass="p-button-outlined p-button-secondary"
+          [disabled]="loading"
+        ></p-button>
+        <p-button
+          label="Actualizar Destino"
+          icon="pi pi-check"
+          type="submit"
+          styleClass="p-button-warning"
+          [loading]="loading"
+          [disabled]="loading"
+        ></p-button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!loadingData && !destination" class="text-center p-8">
+    <i class="pi pi-exclamation-triangle text-4xl text-red-400 mb-4"></i>
+    <p class="text-red-400 font-bold text-lg mb-2">Error al cargar el destino</p>
+    <p class="text-gray-400 mb-4">No se pudo encontrar el destino solicitado</p>
+    <p-button
+      label="Volver a la lista"
+      icon="pi pi-arrow-left"
+      (onClick)="goBack()"
+      styleClass="p-button-outlined"
+    ></p-button>
+  </div>
+</div>
+
+<p-toast></p-toast>
