@@ -1,1 +1,147 @@
-<p>update works!</p>
+<div class="card p-8 max-w-4xl mx-auto">
+  <!-- Loading State -->
+  <div *ngIf="loadingData" class="text-center p-8">
+    <i class="pi pi-spin pi-spinner text-4xl text-blue-400 mb-4"></i>
+    <p class="text-gray-300 text-lg">Cargando datos de la reserva...</p>
+  </div>
+
+  <!-- Form -->
+  <div *ngIf="!loadingData && booking">
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-100 mb-2">Editar Reserva</h2>
+      <p class="text-gray-400">ID: {{ booking.id }} - Actualice la información de la reserva</p>
+    </div>
+
+    <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Booking Date -->
+      <div class="flex flex-col gap-2">
+        <label for="booking_date" class="font-semibold text-gray-200">
+          Fecha de Reserva <span class="text-red-500">*</span>
+        </label>
+        <p-datepicker
+          id="booking_date"
+          formControlName="booking_date"
+          [class.p-invalid]="isFieldInvalid('booking_date')"
+          styleClass="w-full"
+          placeholder="Seleccione la fecha"
+        ></p-datepicker>
+        <small 
+          *ngIf="isFieldInvalid('booking_date')" 
+          class="text-red-400"
+        >
+          {{ getErrorMessage('booking_date') }}
+        </small>
+      </div>
+
+      <!-- Customer -->
+      <div class="flex flex-col gap-2">
+        <label for="customer" class="font-semibold text-gray-200">
+          Cliente <span class="text-red-500">*</span>
+        </label>
+        <p-select
+          id="customer"
+          formControlName="customer"
+          [options]="customers"
+          optionLabel="first_name"
+          [showClear]="true"
+          placeholder="Seleccione un cliente"
+          [class.p-invalid]="isFieldInvalid('customer')"
+          styleClass="w-full"
+        >
+          <ng-template let-customer pTemplate="selectedItem">
+            <span *ngIf="customer">{{ customer.first_name }} {{ customer.last_name }}</span>
+          </ng-template>
+          <ng-template let-customer pTemplate="item">
+            <div>{{ customer.first_name }} {{ customer.last_name }}</div>
+          </ng-template>
+        </p-select>
+        <small 
+          *ngIf="isFieldInvalid('customer')" 
+          class="text-red-400"
+        >
+          {{ getErrorMessage('customer') }}
+        </small>
+      </div>
+
+      <!-- Plan -->
+      <div class="flex flex-col gap-2">
+        <label for="plan" class="font-semibold text-gray-200">
+          Plan <span class="text-red-500">*</span>
+        </label>
+        <p-select
+          id="plan"
+          formControlName="plan"
+          [options]="plans"
+          optionLabel="name"
+          [showClear]="true"
+          placeholder="Seleccione un plan"
+          [class.p-invalid]="isFieldInvalid('plan')"
+          styleClass="w-full"
+        ></p-select>
+        <small 
+          *ngIf="isFieldInvalid('plan')" 
+          class="text-red-400"
+        >
+          {{ getErrorMessage('plan') }}
+        </small>
+      </div>
+
+      <!-- Status -->
+      <div class="flex flex-col gap-2">
+        <label for="status" class="font-semibold text-gray-200">
+          Estado <span class="text-red-500">*</span>
+        </label>
+        <p-select
+          id="status"
+          formControlName="status"
+          [options]="statusOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Seleccione el estado"
+          [class.p-invalid]="isFieldInvalid('status')"
+          styleClass="w-full"
+        ></p-select>
+        <small 
+          *ngIf="isFieldInvalid('status')" 
+          class="text-red-400"
+        >
+          {{ getErrorMessage('status') }}
+        </small>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end gap-3 pt-4 border-t border-gray-700">
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          (onClick)="goBack()"
+          styleClass="p-button-outlined p-button-secondary"
+          [disabled]="loading"
+        ></p-button>
+        <p-button
+          label="Actualizar Reserva"
+          icon="pi pi-check"
+          type="submit"
+          styleClass="p-button-warning"
+          [loading]="loading"
+          [disabled]="loading"
+        ></p-button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!loadingData && !booking" class="text-center p-8">
+    <i class="pi pi-exclamation-triangle text-4xl text-red-400 mb-4"></i>
+    <p class="text-red-400 font-bold text-lg mb-2">Error al cargar la reserva</p>
+    <p class="text-gray-400 mb-4">No se pudo encontrar la reserva solicitada</p>
+    <p-button
+      label="Volver a la lista"
+      icon="pi pi-arrow-left"
+      (onClick)="goBack()"
+      styleClass="p-button-outlined"
+    ></p-button>
+  </div>
+</div>
+
+<p-toast></p-toast>
