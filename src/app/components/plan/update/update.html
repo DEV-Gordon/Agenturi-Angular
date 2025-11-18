@@ -1,1 +1,129 @@
-<p>update works!</p>
+<div class="card p-8 max-w-4xl mx-auto">
+
+  <!-- Loading State -->
+  <div *ngIf="loadingData" class="text-center p-8">
+    <i class="pi pi-spin pi-spinner text-4xl text-blue-400 mb-4"></i>
+    <p class="text-gray-300 text-lg">Cargando datos del plan...</p>
+  </div>
+
+  <!-- Form -->
+  <div *ngIf="!loadingData && form">
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-100 mb-2">Editar Plan</h2>
+      <p class="text-gray-400">ID: {{ planId }} - Actualice la información del plan</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+
+      <!-- Name -->
+      <div class="flex flex-col gap-2">
+        <label for="name" class="font-semibold text-gray-200">
+          Nombre del Plan <span class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          id="name"
+          formControlName="name"
+          placeholder="Ej: Plan Premium"
+          class="w-full"
+          [class.p-invalid]="form.controls['name'].invalid && form.controls['name'].touched"
+        />
+        <small *ngIf="form.controls['name'].invalid && form.controls['name'].touched" class="text-red-400">
+          El nombre es obligatorio.
+        </small>
+      </div>
+
+      <!-- Description -->
+      <div class="flex flex-col gap-2">
+        <label for="description" class="font-semibold text-gray-200">
+          Descripción
+        </label>
+        <textarea
+          pTextarea
+          id="description"
+          formControlName="description"
+          placeholder="Descripción del plan"
+          rows="3"
+          class="w-full"
+        ></textarea>
+      </div>
+
+      <!-- Base Price -->
+      <div class="flex flex-col gap-2">
+        <label for="base_price" class="font-semibold text-gray-200">
+          Precio Base <span class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          id="base_price"
+          type="number"
+          formControlName="base_price"
+          placeholder="Ej: 100.00"
+          class="w-full"
+          [class.p-invalid]="form.controls['base_price'].invalid && form.controls['base_price'].touched"
+        />
+        <small *ngIf="form.controls['base_price'].invalid && form.controls['base_price'].touched" class="text-red-400">
+          El precio base es obligatorio.
+        </small>
+      </div>
+
+      <!-- Destination -->
+      <div class="flex flex-col gap-2">
+        <label for="destination_id" class="font-semibold text-gray-200">
+          Destino <span class="text-red-500">*</span>
+        </label>
+        <p-select
+          id="destination_id"
+          formControlName="destination_id"
+          [options]="destinations"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Seleccione un destino"
+          class="w-full"
+          [class.p-invalid]="form.controls['destination_id'].invalid && form.controls['destination_id'].touched"
+        ></p-select>
+        <small *ngIf="form.controls['destination_id'].invalid && form.controls['destination_id'].touched" class="text-red-400">
+          Debe seleccionar un destino.
+        </small>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end gap-3 pt-4 border-t border-gray-700">
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          (onClick)="goBack()"
+          styleClass="p-button-outlined p-button-secondary"
+          [disabled]="loading"
+        ></p-button>
+
+        <p-button
+          label="Actualizar Plan"
+          icon="pi pi-check"
+          type="submit"
+          styleClass="p-button-warning"
+          [loading]="loading"
+          [disabled]="loading"
+        ></p-button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!loadingData && !form" class="text-center p-8">
+    <i class="pi pi-exclamation-triangle text-4xl text-red-400 mb-4"></i>
+    <p class="text-red-400 font-bold text-lg mb-2">Error al cargar el plan</p>
+    <p class="text-gray-400 mb-4">No se pudo encontrar el plan solicitado</p>
+
+    <p-button
+      label="Volver a la lista"
+      icon="pi pi-arrow-left"
+      (onClick)="goBack()"
+      styleClass="p-button-outlined"
+    ></p-button>
+  </div>
+
+</div>
+
+<p-toast></p-toast>

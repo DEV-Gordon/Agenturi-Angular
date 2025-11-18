@@ -55,7 +55,7 @@ createplan(plan: PlanI): Observable<PlanResponseI> {
   }
 
   updateplan(id: number, plan: Partial<PlanI>): Observable<PlanResponseI> {
-    const url = `${this.baseUrl}/${id}`;
+    const url = `${this.baseUrl}/${id}/`;
     console.log('Updating plan at URL:', url, 'with data:', plan);
     return this.http.put<PlanResponseI>(url, plan)
       .pipe(
