@@ -1,1 +1,120 @@
-<p>update works!</p>
+<div class="card p-8 max-w-4xl mx-auto">
+  <!-- Loading State -->
+  <div *ngIf="loadingData" class="text-center p-8">
+    <i class="pi pi-spin pi-spinner text-4xl text-blue-400 mb-4"></i>
+    <p class="text-gray-300 text-lg">Cargando datos de la actividad...</p>
+  </div>
+
+  <!-- Form -->
+  <div *ngIf="!loadingData && activity">
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-100 mb-2">Editar Actividad</h2>
+      <p class="text-gray-400">ID: {{ activity.id }} - Actualice la información de la actividad</p>
+    </div>
+
+    <form [formGroup]="activityForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Name -->
+      <div class="flex flex-col gap-2">
+        <label for="name" class="font-semibold text-gray-200">
+          Nombre <span class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          id="name"
+          formControlName="name"
+          placeholder="Ej: Tour por la Ciudad Amurallada"
+          [class.p-invalid]="isFieldInvalid('name')"
+          class="w-full"
+        />
+        <small *ngIf="isFieldInvalid('name')" class="text-red-400">
+          {{ getErrorMessage('name') }}
+        </small>
+      </div>
+
+      <!-- Description -->
+      <div class="flex flex-col gap-2">
+        <label for="description" class="font-semibold text-gray-200">Descripción</label>
+        <textarea
+          pTextarea
+          id="description"
+          formControlName="description"
+          placeholder="Descripción de la actividad"
+          rows="4"
+          class="w-full"
+        ></textarea>
+      </div>
+
+      <!-- Extra Cost -->
+      <div class="flex flex-col gap-2">
+        <label for="extra_cost" class="font-semibold text-gray-200">
+          Costo Extra <span class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          id="extra_cost"
+          type="number"
+          formControlName="extra_cost"
+          placeholder="0"
+          [class.p-invalid]="isFieldInvalid('extra_cost')"
+          class="w-full"
+        />
+        <small *ngIf="isFieldInvalid('extra_cost')" class="text-red-400">
+          {{ getErrorMessage('extra_cost') }}
+        </small>
+      </div>
+
+      <!-- Itinerary ID -->
+      <div class="flex flex-col gap-2">
+        <label for="itinerary" class="font-semibold text-gray-200">
+          ID del Itinerario <span class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          id="itinerary"
+          type="number"
+          formControlName="itinerary"
+          placeholder="Ej: 1"
+          [class.p-invalid]="isFieldInvalid('itinerary')"
+          class="w-full"
+        />
+        <small *ngIf="isFieldInvalid('itinerary')" class="text-red-400">
+          {{ getErrorMessage('itinerary') }}
+        </small>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end gap-3 pt-4 border-t border-gray-700">
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          (onClick)="goBack()"
+          styleClass="p-button-outlined p-button-secondary"
+          [disabled]="loading"
+        ></p-button>
+        <p-button
+          label="Actualizar Actividad"
+          icon="pi pi-check"
+          type="submit"
+          styleClass="p-button-warning"
+          [loading]="loading"
+          [disabled]="loading"
+        ></p-button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!loadingData && !activity" class="text-center p-8">
+    <i class="pi pi-exclamation-triangle text-4xl text-red-400 mb-4"></i>
+    <p class="text-red-400 font-bold text-lg mb-2">Error al cargar la actividad</p>
+    <p class="text-gray-400 mb-4">No se pudo encontrar la actividad solicitada</p>
+    <p-button
+      label="Volver a la lista"
+      icon="pi pi-arrow-left"
+      (onClick)="goBack()"
+      styleClass="p-button-outlined"
+    ></p-button>
+  </div>
+</div>
+
+<p-toast></p-toast>

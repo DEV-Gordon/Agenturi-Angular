@@ -16,26 +16,26 @@ interface PaginatedResponse<T> {
   providedIn: 'root'
 })
 export class ActivityService {
-  private baseUrl = 'http://127.0.0.1:8000/api/activities/';
+  private baseUrl = 'http://127.0.0.1:8000/api/activities';
   private activitiesSubject = new BehaviorSubject<ActivityResponseI[]>([]);
   public activities$ = this.activitiesSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  getAllactivities(): Observable<ActivityResponseI[]> {
-    return this.http.get<PaginatedResponse<ActivityResponseI>>(`${this.baseUrl}/`)
-      .pipe(
-        map(response => response.results),
-        tap(activities => {
-          console.log('Fetched activities:', activities);
-          this.activitiesSubject.next(activities);
-        }),
-        catchError(error => {
-          console.error('Error fetching activities:', error);
-          return throwError(() => error);
-        })
-      );
-  }
+getAllactivities(): Observable<ActivityResponseI[]> {
+  return this.http.get<ActivityResponseI[]>(this.baseUrl)
+    .pipe(
+      tap(activities => {
+        console.log('Fetched activities:', activities);
+        this.activitiesSubject.next(activities);
+      }),
+      catchError(error => {
+        console.error('Error fetching activities:', error);
+        return throwError(() => error);
+      })
+    );
+}
+
 
   getActivityById(id: number): Observable<ActivityResponseI> {
     return this.http.get<ActivityResponseI>(`${this.baseUrl}/${id}/`)
