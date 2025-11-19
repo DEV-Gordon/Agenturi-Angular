@@ -1,1 +1,90 @@
-<p>create works!</p>
+    <div class="card p-8 max-w-4xl mx-auto">
+      <div class="mb-6">
+        <h2 class="text-2xl font-bold text-gray-100 mb-2">Crear Nuevo Alojamiento</h2>
+        <p class="text-gray-400">Complete el formulario para agregar un nuevo alojamiento</p>
+      </div>
+
+      <form [formGroup]="accommodationForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Name -->
+        <div class="flex flex-col gap-2">
+          <label for="name" class="font-semibold text-gray-200">
+            Nombre <span class="text-red-500">*</span>
+          </label>
+          <input
+            pInputText
+            id="name"
+            formControlName="name"
+            placeholder="Ej: Hotel Caribe"
+            [class.p-invalid]="isFieldInvalid('name')"
+            class="w-full"
+          />
+          <small *ngIf="isFieldInvalid('name')" class="text-red-400">
+            {{ getErrorMessage('name') }}
+          </small>
+        </div>
+
+        <!-- Type -->
+        <div class="flex flex-col gap-2">
+          <label for="type" class="font-semibold text-gray-200">Tipo</label>
+          <input
+            pInputText
+            id="type"
+            formControlName="type"
+            placeholder="Ej: Hotel, Hostal, Apartamento"
+            class="w-full"
+          />
+        </div>
+
+        <!-- Address -->
+        <div class="flex flex-col gap-2">
+          <label for="address" class="font-semibold text-gray-200">Dirección</label>
+          <input
+            pInputText
+            id="address"
+            formControlName="address"
+            placeholder="Ej: Calle 10 # 20-30"
+            class="w-full"
+          />
+        </div>
+
+        <!-- Destination -->
+        <div class="flex flex-col gap-2">
+          <label for="destination" class="font-semibold text-gray-200">
+            Destino <span class="text-red-500">*</span>
+          </label>
+          <p-select
+            id="destination"
+            formControlName="destination"
+            [options]="destinations"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Seleccione un destino"
+            [class.p-invalid]="isFieldInvalid('destination')"
+            styleClass="w-full"
+          ></p-select>
+          <small *ngIf="isFieldInvalid('destination')" class="text-red-400">
+            {{ getErrorMessage('destination') }}
+          </small>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex justify-end gap-3 pt-4 border-t border-gray-700">
+          <p-button
+            label="Cancelar"
+            icon="pi pi-times"
+            (onClick)="goBack()"
+            styleClass="p-button-outlined p-button-secondary"
+            [disabled]="loading"
+          ></p-button>
+          <p-button
+            label="Guardar Alojamiento"
+            icon="pi pi-check"
+            type="submit"
+            styleClass="p-button-success"
+            [loading]="loading"
+            [disabled]="loading"
+          ></p-button>
+        </div>
+      </form>
+    </div>
+    <p-toast></p-toast>

@@ -17,26 +17,25 @@ interface PaginatedResponse<T> {
   providedIn: 'root'
 })
 export class AccommodationService {
-  private baseUrl = 'http://127.0.0.1:8000/api/accommodations/';
+  private baseUrl = 'http://127.0.0.1:8000/api/accommodations';
   private accommodationsSubject = new BehaviorSubject<AccommodationResponseI[]>([]);
   public accommodations$ = this.accommodationsSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  getAllaccommodations(): Observable<AccommodationResponseI[]> {
-    return this.http.get<PaginatedResponse<AccommodationResponseI>>(`${this.baseUrl}/`)
-      .pipe(
-        map(response => response.results),
-        tap(accommodations => {
-          console.log('Fetched accommodations:', accommodations);
-          this.accommodationsSubject.next(accommodations);
-        }),
-        catchError(error => {
-          console.error('Error fetching accommodations:', error);
-          return throwError(() => error);
-        })
-      );
-  }
+getAllaccommodations(): Observable<AccommodationResponseI[]> {
+  return this.http.get<AccommodationResponseI[]>(this.baseUrl)
+    .pipe(
+      tap(accommodations => {
+        console.log('Fetched accommodations:', accommodations);
+        this.accommodationsSubject.next(accommodations);
+      }),
+      catchError(error => {
+        console.error('Error fetching accommodations:', error);
+        return throwError(() => error);
+      })
+    );
+}
 
   getaccommodationById(id: number): Observable<AccommodationResponseI> {
     return this.http.get<AccommodationResponseI>(`${this.baseUrl}/${id}/`)
