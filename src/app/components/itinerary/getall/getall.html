@@ -1,1 +1,104 @@
-<p>getall works!</p>
+<div class="card p-8">
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-2xl font-bold">Gestión de Itinerarios</h2>
+    <p-button
+      label="Nuevo Itinerario"
+      icon="pi pi-plus"
+      [routerLink]="['/itineraries/new']"
+      styleClass="p-button-success"
+    ></p-button>
+  </div>
+
+  <p-table
+    [value]="itineraries"
+    [loading]="loading"
+    [paginator]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    [rowsPerPageOptions]="[5, 10, 25, 50]"
+    dataKey="id"
+    styleClass="p-datatable-striped"
+    [tableStyle]="{'min-width': '50rem'}"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="id">
+          ID <p-sortIcon field="id"></p-sortIcon>
+        </th>
+        <th pSortableColumn="day">
+          Día <p-sortIcon field="day"></p-sortIcon>
+        </th>
+        <th pSortableColumn="description">
+          Descripción <p-sortIcon field="description"></p-sortIcon>
+        </th>
+        <th pSortableColumn="plan.name">
+          Plan Turístico <p-sortIcon field="plan.name"></p-sortIcon>
+        </th>
+        <th class="text-center">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-itinerary>
+      <tr>
+        <td>{{ itinerary.id }}</td>
+        <td>
+          <span class="inline-flex items-center justify-center w-10 h-10 bg-blue-600 text-white rounded-full font-bold">
+            {{ itinerary.day }}
+          </span>
+        </td>
+        <td>
+          <div class="max-w-md">
+            <p class="text-sm" [title]="itinerary.description">
+              {{ truncateText(itinerary.description, 80) }}
+            </p>
+          </div>
+        </td>
+        <td>
+          <span *ngIf="itinerary.plan" class="font-medium">
+            {{ itinerary.plan.name }}
+          </span>
+          <span *ngIf="!itinerary.plan">N/A</span>
+        </td>
+        <td class="text-center">
+          <div class="flex justify-center gap-2">
+            <p-button
+              icon="pi pi-pencil"
+              [routerLink]="['/itineraries/edit', itinerary.id]"
+              styleClass="p-button-rounded p-button-text p-button-warning"
+              pTooltip="Editar"
+              tooltipPosition="top"
+            ></p-button>
+            <p-button
+              icon="pi pi-trash"
+              (onClick)="confirmDelete(itinerary)"
+              styleClass="p-button-rounded p-button-text p-button-danger"
+              pTooltip="Eliminar"
+              tooltipPosition="top"
+            ></p-button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="5" class="text-center p-4">
+          <div class="flex flex-col items-center gap-3">
+            <i class="pi pi-info-circle text-4xl text-gray-400"></i>
+            <span class="text-gray-500">No se encontraron itinerarios</span>
+            <p-button
+              label="Crear Primer Itinerario"
+              icon="pi pi-plus"
+              [routerLink]="['/itineraries/new']"
+              styleClass="p-button-sm p-button-outlined"
+            ></p-button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-confirmDialog></p-confirmDialog>
+<p-toast></p-toast>

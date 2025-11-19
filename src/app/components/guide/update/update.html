@@ -1,1 +1,125 @@
-<p>update works!</p>
+<div class="card p-8 max-w-4xl mx-auto">
+  <!-- Loading State -->
+  <div *ngIf="loadingData" class="text-center p-8">
+    <i class="pi pi-spin pi-spinner text-4xl text-blue-400 mb-4"></i>
+    <p class="text-gray-300 text-lg">Cargando datos del guía...</p>
+  </div>
+
+  <!-- Form -->
+  <div *ngIf="!loadingData && guide">
+    <div class="mb-6">
+      <h2 class="text-2xl font-bold text-gray-100 mb-2">Editar Guía</h2>
+      <p class="text-gray-400">ID: {{ guide.id }} - Actualice la información del guía</p>
+    </div>
+
+    <form [formGroup]="guideForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Name -->
+      <div class="flex flex-col gap-2">
+        <label for="name" class="font-semibold text-gray-200">
+          Nombre Completo <span class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          id="name"
+          formControlName="name"
+          placeholder="Ej: Juan Carlos Pérez"
+          [class.p-invalid]="isFieldInvalid('name')"
+          class="w-full"
+        />
+        <small *ngIf="isFieldInvalid('name')" class="text-red-400">
+          {{ getErrorMessage('name') }}
+        </small>
+      </div>
+
+      <!-- Phone -->
+      <div class="flex flex-col gap-2">
+        <label for="phone" class="font-semibold text-gray-200">
+          Teléfono <span class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          id="phone"
+          formControlName="phone"
+          placeholder="Ej: +57 300 123 4567"
+          [class.p-invalid]="isFieldInvalid('phone')"
+          class="w-full"
+        />
+        <small *ngIf="isFieldInvalid('phone')" class="text-red-400">
+          {{ getErrorMessage('phone') }}
+        </small>
+      </div>
+
+      <!-- Language -->
+      <div class="flex flex-col gap-2">
+        <label for="language" class="font-semibold text-gray-200">
+          Idioma <span class="text-red-500">*</span>
+        </label>
+        <input
+          pInputText
+          id="language"
+          formControlName="language"
+          placeholder="Ej: Español, Inglés, Francés"
+          [class.p-invalid]="isFieldInvalid('language')"
+          class="w-full"
+        />
+        <small *ngIf="isFieldInvalid('language')" class="text-red-400">
+          {{ getErrorMessage('language') }}
+        </small>
+      </div>
+
+      <!-- Plan -->
+      <div class="flex flex-col gap-2">
+        <label for="plan" class="font-semibold text-gray-200">
+          Plan Asignado <span class="text-red-500">*</span>
+        </label>
+        <p-select
+          id="plan"
+          formControlName="plan"
+          [options]="plans"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Seleccione un plan"
+          [class.p-invalid]="isFieldInvalid('plan')"
+          styleClass="w-full"
+        ></p-select>
+        <small *ngIf="isFieldInvalid('plan')" class="text-red-400">
+          {{ getErrorMessage('plan') }}
+        </small>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end gap-3 pt-4 border-t border-gray-700">
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          (onClick)="goBack()"
+          styleClass="p-button-outlined p-button-secondary"
+          [disabled]="loading"
+        ></p-button>
+        <p-button
+          label="Actualizar Guía"
+          icon="pi pi-check"
+          type="submit"
+          styleClass="p-button-warning"
+          [loading]="loading"
+          [disabled]="loading"
+        ></p-button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="!loadingData && !guide" class="text-center p-8">
+    <i class="pi pi-exclamation-triangle text-4xl text-red-400 mb-4"></i>
+    <p class="text-red-400 font-bold text-lg mb-2">Error al cargar el guía</p>
+    <p class="text-gray-400 mb-4">No se pudo encontrar el guía solicitado</p>
+    <p-button
+      label="Volver a la lista"
+      icon="pi pi-arrow-left"
+      (onClick)="goBack()"
+      styleClass="p-button-outlined"
+    ></p-button>
+  </div>
+</div>
+
+<p-toast></p-toast>
